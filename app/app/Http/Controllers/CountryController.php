@@ -31,7 +31,6 @@ class CountryController extends Controller
             'receiver' => 'bail|required|email',
             'subject' => 'bail|required|min:8',
         ]);
-
         if ($validator->fails()) {
             return response()->json($validator->errors()->add('error', 'true'));
         }
