@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-
 class DoctorController extends Controller
 {
     public function create(Request $request) :JsonResponse
@@ -19,7 +18,7 @@ class DoctorController extends Controller
             'password' => 'bail|required|min:8',
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors()->add('error', 'true'));
+            return response()->json($validator->errors(),HTTP_BAD_REQUEST);
         }
         $data = [
             "name" => $request->input('name', null),
@@ -32,7 +31,7 @@ class DoctorController extends Controller
             'email' => $data['email'],
             'phone' => $data['phone'],
             'password' => $data['password'],
-            'status' => 2
+            'status' => STATUS_ON
         ]);
         return response()->json(['message' => 'Doctor created successfully']);
     }
@@ -41,7 +40,7 @@ class DoctorController extends Controller
     {
         $data = DB::table('doctor')->where('id', $id)->get();
         if (count($data) === 0) {
-            return response()->json(['message' => 'Doctor not found'], 404);
+            return response()->json(['message' => 'Doctor not found'], HTTP_NOT_FOUND);
         }
         $result = $data[0];
 //        dd($result->id);

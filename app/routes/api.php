@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\BookingController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -15,8 +16,9 @@ use App\Http\Controllers\DoctorController;
 |
 */
 
-Route::get('/country/{id}', [CountryController::class, 'show']);
+//Route::get('/country/{id}', [CountryController::class, 'show']);
 Route::post('/mail', [CountryController::class, 'sendMail']);
 Route::post('/doctor/create', [DoctorController::class, 'create']);
 Route::get('/doctor/{id}', [DoctorController::class, 'getById']);
+//Route::post('/booking/create', [BookingController::class, 'create']);
 
