@@ -20,5 +20,5 @@ use App\Http\Controllers\BookingController;
 Route::post('/mail', [CountryController::class, 'sendMail']);
 Route::post('/doctor/create', [DoctorController::class, 'create']);
 Route::get('/doctor/{id}', [DoctorController::class, 'getById']);
-//Route::post('/booking/create', [BookingController::class, 'create']);
+Route::post('/booking/create', [BookingController::class, 'create']);
 
