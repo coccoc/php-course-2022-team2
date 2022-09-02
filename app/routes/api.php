@@ -15,5 +15,5 @@ use App\Http\Controllers\CountryController;
 */
 
 Route::get('/country/{id}', [CountryController::class, 'show']);
-Route::get('/mail', [CountryController::class, 'sendMail']);
+Route::post('/mail', [CountryController::class, 'sendMail']);
 

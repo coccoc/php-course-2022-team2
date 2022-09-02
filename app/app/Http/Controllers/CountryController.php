@@ -3,13 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Http;
-
+use Illuminate\Support\Facades\Validator;
 class CountryController extends Controller
 {
     /**
@@ -27,12 +24,30 @@ class CountryController extends Controller
         return response()->json($result);
     }
 
-    public function sendMail()
+    public function sendMail(Request $request)
     {
-        $response = Http::post('https://evoucher-api.urbox.dev/v1/language', [
-            'message' => "<p>This is normal text - <b>and this is bold text</b>.</p>",
-            'subject' => 'Network Administrator',
-            "receiver" => "tuan.dc@urbox.vn",
+        $validator = Validator::make($request->all(), [
+            'message' => 'bail|required',
+            'receiver' => 'bail|required|email',
+            'subject' => 'bail|required|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->add('error', 'true'));
+        }
+        $data = [
+            "message" => $request->input('message', null),
+            "subject" => $request->input('subject', null),
+            "receiver" => $request->input('receiver', null),
+        ];
+//        if ($data['message'] == null || $data['subject'] == null || $data['receiver'] == null) {
+//            return response()->json(['message' => 'Please fill all fields [message, subject, receiver]'], 400);
+//        }
+        $url = getenv('EVOUCHER_DOMAIN');
+        $response = Http::post($url, [
+            'message' => $data['message'],
+            'subject' => $data['subject'],
+            "receiver" => $data['receiver'],
         ]);
         return response($response->body());
     }
