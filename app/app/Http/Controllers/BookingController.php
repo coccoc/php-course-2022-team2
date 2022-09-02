@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 
 class BookingController extends Controller
 {
-    public function create(Request $request) :JsonResponse
+    public function create(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'doctor_id' => 'bail|required|numeric',
@@ -21,7 +21,7 @@ class BookingController extends Controller
             'shift' => 'bail|required|numeric',
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors(),HTTP_BAD_REQUEST);
+            return response()->json($validator->errors(), HTTP_BAD_REQUEST);
         }
         $dataBooking = [
             "doctor_id" => $request->input('doctor_id', null),
@@ -46,5 +46,20 @@ class BookingController extends Controller
         }
         DB::table('schedule')->insert($dataBooking);
         return response()->json(['message' => 'Schedule created successfully']);
+    }
+
+    public function Search(Request $request): JsonResponse
+    {
+        $dataSearch = [
+            "date" => $request->input('date', null),
+            "doctor_id" => $request->input('doctor_id', null),
+        ];
+        $dataSearch = array_filter($dataSearch);
+        $data = DB::table('schedule')->where($dataSearch)->get();
+        if (count($data) === 0) {
+            return response()->json(['message' => 'Schedule not found'], HTTP_NOT_FOUND);
+        }
+        $result = $data[0];
+        return response()->json($result);
     }
 }

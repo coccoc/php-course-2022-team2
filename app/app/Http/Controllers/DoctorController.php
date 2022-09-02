@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class DoctorController extends Controller
 {
-    public function create(Request $request) :JsonResponse
+    public function create(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'name' => 'bail|required',
@@ -18,7 +18,7 @@ class DoctorController extends Controller
             'password' => 'bail|required|min:8',
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors(),HTTP_BAD_REQUEST);
+            return response()->json($validator->errors(), HTTP_BAD_REQUEST);
         }
         $data = [
             "name" => $request->input('name', null),
@@ -36,7 +36,7 @@ class DoctorController extends Controller
         return response()->json(['message' => 'Doctor created successfully']);
     }
 
-    public function getById(Request $request, $id) :JsonResponse
+    public function getById(Request $request, $id): JsonResponse
     {
         $data = DB::table('doctor')->where('id', $id)->get();
         if (count($data) === 0) {
@@ -45,5 +45,20 @@ class DoctorController extends Controller
         $result = $data[0];
 //        dd($result->id);
         return response()->json($result);
+    }
+
+    public function Search(Request $request): JsonResponse
+    {
+        $dataSearch = [
+            "id" => $request->input('id', null),
+            "name" => $request->input('name', null),
+        ];
+        $dataSearch = array_filter($dataSearch);
+//        dd($dataSearch);
+        $data = DB::table('doctor')->where($dataSearch)->get();
+//        if (count($data) === 0) {
+//            return response()->json(['message' => 'Doctor not found'], HTTP_NOT_FOUND);
+//        }
+        return response()->json($data);
     }
 }
