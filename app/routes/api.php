@@ -18,9 +18,12 @@ use App\Http\Controllers\BookingController;
 
 //Route::get('/country/{id}', [CountryController::class, 'show']);
 Route::post('/mail', [CountryController::class, 'sendMail']);
+Route::get('/doctor/list', [DoctorController::class, 'list']);
+Route::get('/doctor/detail/{id}', [DoctorController::class, 'doctorDetail']);
 Route::post('/doctor/create', [DoctorController::class, 'create']);
 Route::get('/doctor/{id}', [DoctorController::class, 'getById']);
 Route::get('/doctor', [DoctorController::class, 'Search']);
 Route::post('/booking/create', [BookingController::class, 'create']);
 Route::get('/booking', [BookingController::class, 'Search']);
+
 

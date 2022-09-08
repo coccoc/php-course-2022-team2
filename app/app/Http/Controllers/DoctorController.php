@@ -61,4 +61,27 @@ class DoctorController extends Controller
 //        }
         return response()->json($data);
     }
+    public function list(Request $request): JsonResponse{
+        //dd(1);
+        $data = DB::table('doctor')->get();
+        //dd($data);
+        if (count($data) === 0) {
+            return response()->json(['message' => 'Doctor not found'], HTTP_NOT_FOUND);
+        }
+        $result = $data;
+
+        return response()->json($result);
+    }
+    public function doctorDetail(Request $request, $id): JsonResponse{
+        $data = DB::table('doctor')
+                ->join('schedule', 'schedule.doctor_id', '=', 'doctor.id')
+                ->select('schedule.doctor_id', 'doctor.name', 'doctor.email', 'doctor.phone', 'schedule.id', 'schedule.shift', 'schedule.date')
+                ->get();
+        if (count($data) === 0){
+            return response()->json(['message'=>'Doctor not found'], HTTP_NOT_FOUND);
+        }
+        $result = $data;
+        return response()->json($result);
+    }
 }
+
