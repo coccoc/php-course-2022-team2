@@ -32,7 +32,7 @@ class BookingController extends Controller
             "customer_name" => $request->input('customer_name', null),
             "shift" => $request->input('shift', null),
         ];
-//        $response = CountryController::sendBookingMail($dataBooking);
+//        $response = MailController::sendBookingMail($dataBooking);
 
         $dataSchedule = DB::table('schedule')
             ->where('doctor_id', $dataBooking['doctor_id'])
