@@ -17,4 +17,6 @@ define('STATUS_ON', 2);
 define('STATUS_OFF', 1);
 // ▲ -- Định nghĩa trạng thái bản ghi --
 
+define('EMAIL_TEMPLATE', "Lịch hẹn của {name} đã được đặt thành công <br> Vào ca {shift} ngày {date}");
+
 

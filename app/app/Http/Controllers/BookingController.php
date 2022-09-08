@@ -6,12 +6,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-
+use App\Http\Controllers\MailController;
 
 class BookingController extends Controller
 {
     public function create(Request $request): JsonResponse
     {
+
         $validator = Validator::make($request->all(), [
             'doctor_id' => 'bail|required|numeric',
             'date' => 'bail|required',
@@ -31,20 +32,28 @@ class BookingController extends Controller
             "customer_name" => $request->input('customer_name', null),
             "shift" => $request->input('shift', null),
         ];
-//        dd(HTTP_BAD_REQUEST);
+//        $response = CountryController::sendBookingMail($dataBooking);
+
         $dataSchedule = DB::table('schedule')
             ->where('doctor_id', $dataBooking['doctor_id'])
             ->where('date', $dataBooking['date'])
-            ->where('shift', '!=', FULLTIME_SHIFT)
+            ->whereIn('shift', [$dataBooking['shift'], FULLTIME_SHIFT])
+            ->where('booked', '!=' , $dataBooking['shift'])
             ->get();
         if (count($dataSchedule) === 0) {
             return response()->json(['message' => 'Schedule not found'], HTTP_NOT_FOUND);
         }
         $schedule = $dataSchedule[0];
-        if (in_array($schedule->shift, [MORNING_SHIFT, AFTERNOON_SHIFT])) {
-            $dataBooking['shift'] = FULLTIME_SHIFT;
+        if (in_array($schedule->booked, [MORNING_SHIFT, AFTERNOON_SHIFT])) {
+            DB::table('schedule')
+              ->where('id', $schedule->id)
+              ->update(['booked' => FULLTIME_SHIFT]);
+        } else {
+            DB::table('schedule')
+              ->where('id', $schedule->id)
+              ->update(['booked' => $dataBooking['shift']]);
         }
-        DB::table('schedule')->insert($dataBooking);
+        DB::table('booking')->insert($dataBooking);
         return response()->json(['message' => 'Schedule created successfully']);
     }
 
