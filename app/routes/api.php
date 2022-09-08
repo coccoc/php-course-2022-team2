@@ -20,6 +20,8 @@ use App\Http\Controllers\ScheduleController;
 //Route::get('/country/{id}', [CountryController::class, 'show']);
 Route::post('/mail', [MailController::class, 'sendMail']);
 Route::post('/doctor/create', [DoctorController::class, 'create']);
+Route::get('/doctor/list', [DoctorController::class, 'list']);
+Route::get('/doctor/detail/{id}', [DoctorController::class, 'doctorDetail']);
 Route::get('/doctor/{id}', [DoctorController::class, 'getById']);
 Route::get('/doctor', [DoctorController::class, 'Search']);
 Route::post('/booking/create', [BookingController::class, 'create']);
