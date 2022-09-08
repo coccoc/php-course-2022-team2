@@ -63,7 +63,7 @@ class DoctorController extends Controller
     }
     public function list(Request $request): JsonResponse{
         //dd(1);
-        $data = DB::table('doctor')->get();
+        $data = DB::table('doctor')->where('status', 2)->get();
         //dd($data);
         if (count($data) === 0) {
             return response()->json(['message' => 'Doctor not found'], HTTP_NOT_FOUND);

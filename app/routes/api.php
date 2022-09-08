@@ -27,4 +27,5 @@ Route::get('/doctor', [DoctorController::class, 'Search']);
 Route::post('/booking/create', [BookingController::class, 'create']);
 Route::get('/booking', [BookingController::class, 'Search']);
 Route::get('/schedule/available', [ScheduleController::class, 'getByDoctorAndDate']);
+Route::get('/schedule/{id}', [ScheduleController::class, 'getByDoctorID']);
 
