@@ -74,9 +74,9 @@ class DoctorController extends Controller
     }
     public function doctorDetail(Request $request, $id): JsonResponse{
         $data = DB::table('doctor')
+                ->where('doctor.id', $id)
                 ->join('schedule', 'schedule.doctor_id', '=', 'doctor.id')
-                ->select('schedule.doctor_id', 'doctor.name', 'doctor.email', 'doctor.phone', 'schedule.id', 'schedule.shift', 'schedule.date')
-                ->get();
+                ->get(['doctor.*', 'schedule.*']);
         if (count($data) === 0){
             return response()->json(['message'=>'Doctor not found'], HTTP_NOT_FOUND);
         }
