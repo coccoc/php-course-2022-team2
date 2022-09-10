@@ -136,12 +136,12 @@ function BookingForm(props) {
     })
   }
 
-  useEffect(() => {
-    //handle change doctor schedule api
-    if (doctorName?.isChoosen && doctorName?.value) {
-      doctorSchedule()
-    }
-  }, [doctorName])
+  // useEffect(() => {
+  //   //handle change doctor schedule api
+  //   if (doctorName?.isChoosen && doctorName?.value) {
+  //     doctorSchedule()
+  //   }
+  // }, [doctorName])
 
   useEffect(() => {
     if (date.value) {
