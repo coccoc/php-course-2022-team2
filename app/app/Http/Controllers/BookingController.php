@@ -71,4 +71,17 @@ class BookingController extends Controller
         $result = $data[0];
         return response()->json($result);
     }
+
+    public function listBooking(Request $request, $id): JsonResponse
+    {
+        $data = DB::table('booking')->where('doctor_id', $id)->get();
+
+        // dd($data);
+        
+        if (count($data) === 0) {
+            return response()->json(['message' => 'Doctor not found'], HTTP_NOT_FOUND);
+        }
+        
+        return response()->json($data);
+    }
 }

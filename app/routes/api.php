@@ -22,7 +22,8 @@ Route::post('/mail', [MailController::class, 'sendMail']);
 Route::post('/doctor/create', [DoctorController::class, 'create']);
 Route::get('/doctor/{id}', [DoctorController::class, 'getById']);
 Route::get('/doctor', [DoctorController::class, 'Search']);
-Route::post('/booking/create', [BookingController::class, 'create']);
+Route::post('/booking/create', [BookingController::class, 'create']);  //done
 Route::get('/booking', [BookingController::class, 'Search']);
-Route::get('/schedule/available', [ScheduleController::class, 'getByDoctorAndDate']);
-
+Route::get('/booking/{id}', [BookingController::class, 'listBooking']); // done
+Route::get('/schedule/available', [ScheduleController::class, 'getByDoctorAndDate']); //done
+Route::get('/schedule/{id}', [ScheduleController::class, 'listSchedule']); //done

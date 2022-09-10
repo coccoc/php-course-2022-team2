@@ -25,4 +25,15 @@ class ScheduleController extends Controller
         $schedule = $dataSchedule[0];
         return response()->json($schedule);
     }
+
+    public function listSchedule(Request $request, $id) {
+
+        $data = DB::table('schedule')->where('doctor_id', $id)->get();
+
+        if (count($data) === 0) {
+            return response()->json(['message' => 'Doctor not found'], HTTP_NOT_FOUND);
+        }
+        
+        return response()->json($data);
+    }
 }
