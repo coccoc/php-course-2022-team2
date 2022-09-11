@@ -16,11 +16,14 @@ function Main(props) {
   const [doctor, setDoctor] = useState([])
   const loginData = useRecoilValue(dataState)
 
+  console.log(doctor)
+
   const callApi = async () => {
     await axios
-      .get(`https://jsonplaceholder.typicode.com/users/${doctorid}`)
+      .get(`http://localhost:8080/api/doctor/detail/${doctorid}`)
       .then((response) => {
-        setDoctor(response.data)
+        console.log(response.data)
+        setDoctor(response.data[0])
       })
       .catch((error) => {
         console.log(error)
@@ -70,14 +73,7 @@ function Main(props) {
                 <Typography className="dIL-paper-content-1-docName" variant="h3">{`Dr.${doctor.name}`}</Typography>
               </div>
               <Divider></Divider>
-              <Box
-                sx={{
-                  margin: '10px 0',
-                }}
-              >
-                <Typography className="dIL-paper-content-title" variant="h4">{`Hospital :`}</Typography>
-                <Typography className="dIL-paper-content-detail" variant="h5">{`${doctor?.company?.name}`}</Typography>
-              </Box>
+
               <Box
                 sx={{
                   margin: '10px 0',

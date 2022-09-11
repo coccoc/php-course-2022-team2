@@ -17,12 +17,7 @@ function DoctorInformation() {
         boxSizing: 'border-box',
       }}
     >
-      <LPNav
-        tabs={[
-          { name: 'Doctor list', to: 'doctor-list' },
-          { name: 'Doctor information', to: '' },
-        ]}
-      />
+      <LPNav />
       <Main doctorid={doctorid} star={star} />
     </Box>
   )
