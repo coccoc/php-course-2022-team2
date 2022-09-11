@@ -36,7 +36,7 @@ function Body() {
         </Button>
         <ResDialog open={openDialog} setOpen={setOpenDialog} />
         <Box className="ds-body-item-1 ">
-          <DSLeft schedules={schedules} setSchedules={setSchedules} />
+          <DSLeft schedules={schedules} setSchedules={setSchedules} id={isLogin.id} getSchedule={getSchedule} />
         </Box>
         <Box className="ds-body-item-2">
           <DSRight schedules={schedules} setSchedules={setSchedules} />

@@ -33,10 +33,9 @@ function DoctorList() {
   }
 
   const doctorInfor = async () => {
-    const res = await axios.get('https://jsonplaceholder.typicode.com/users')
-    if (res.data) {
-      setDatas(res.data)
-    }
+    await axios.get('http://localhost:8080/api/doctor/list').then((response) => {
+      setDatas(response.data)
+    })
   }
 
   useEffect(() => {
@@ -73,7 +72,7 @@ function DoctorList() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {loginData.roll === '' ? (
+                {loginData.roll === '' || datas.length === 0 ? (
                   <TableRow>
                     <TableCell align="left">
                       <Skeleton variant="text" animation="wave" />

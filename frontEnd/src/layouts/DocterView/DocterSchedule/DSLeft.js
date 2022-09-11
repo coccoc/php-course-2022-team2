@@ -13,7 +13,7 @@ import { concatSchedule } from '../../../function/concatSchedule'
 const times = ['Morning', 'Afternoon']
 
 function DSLeft(props) {
-  const { schedules, setSchedules } = props
+  const { schedules, setSchedules, id, getSchedule } = props
   const [loginData, setLoginData] = useRecoilState(dataState)
 
   const [DSFdate, setDSFdate] = useState({
@@ -34,7 +34,8 @@ function DSLeft(props) {
 
   const customDayRenderer = (date, selectedDates, pickersDayProps) => {
     const stringifiedDate = moment(date).format('YYYY-MM-DD')
-    if (schedules.full.includes(stringifiedDate)) {
+    const condition = schedules.some((schedule) => schedule.date === stringifiedDate && schedule.shift === 3)
+    if (condition) {
       return <PickersDay {...pickersDayProps} disabled />
     }
     return <PickersDay {...pickersDayProps} />
@@ -43,17 +44,22 @@ function DSLeft(props) {
   useEffect(() => {
     if (DSFdate.value !== null) {
       const stringifiedDate = moment(DSFdate.value).format('YYYY-MM-DD')
-      var timesArr = []
-      if (schedules.morning.includes(stringifiedDate)) {
-        timesArr = ['Afternoon']
-      } else if (schedules.afternoon.includes(stringifiedDate)) {
-        timesArr = ['Morning']
-      } else {
-        timesArr = times
+      let arr = schedules.filter((schedule) => schedule.date === stringifiedDate)
+      let timesArr = ['Morning', 'Afternoon']
+      console.log(arr)
+      if (arr.length === 1) {
+        switch (arr[0].shift) {
+          case 1:
+            timesArr = ['Afternoon']
+            break
+          default:
+            timesArr = ['Morning']
+            break
+        }
       }
       setTimeTable(timesArr)
     }
-  }, [DSFtime])
+  }, [DSFdate])
 
   //--------------------------------------------------------------------Handle changes
 
@@ -131,54 +137,17 @@ function DSLeft(props) {
     })
   }
 
-  const putSchedlue = async (arr) => {
+  const postSchedlue = async () => {
     let data = {
-      dates: arr,
+      doctor_id: id,
+      date: moment(DSFdate.value).format('YYYY-MM-DD'),
+      shift: DSFtime.value === 'Morning' ? 1 : 2,
     }
 
-    const put = await axios.put(
-      `https://62c65d1874e1381c0a5d833e.mockapi.io/doctorSchedule/${loginData.information.id}`,
-      data,
-    )
-    const res = await axios.get(
-      `https://62c65d1874e1381c0a5d833e.mockapi.io/doctorSchedule/${loginData.information.id}`,
-    )
-    if (res.data) {
-      let array = res.data.dates
-      let fullArr = []
-      let morningArr = []
-      let afternoonArr = []
-      for (let key in array) {
-        switch (array[key].time) {
-          case 'Full':
-            fullArr.splice(fullArr.length, 0, array[key].date)
-            break
-          case 'Morning':
-            morningArr.splice(morningArr.length, 0, array[key].date)
-            break
-          default:
-            afternoonArr.splice(afternoonArr.length, 0, array[key].date)
-            break
-        }
-      }
-
-      setSchedules({
-        value: array,
-        full: fullArr,
-        morning: morningArr,
-        afternoon: afternoonArr,
-      })
-
-      setLoginData({
-        ...loginData,
-        schedule: {
-          value: array,
-          full: fullArr,
-          morning: morningArr,
-          afternoon: afternoonArr,
-        },
-      })
-    }
+    await axios.post(`http://localhost:8080/api/schedule`, data).catch((error) => {
+      console.log(error)
+    })
+    await getSchedule()
   }
 
   const handleSubmit = () => {
@@ -197,32 +166,7 @@ function DSLeft(props) {
       })
     }
     if (DSFtime.choosen && !DSFtime.error && DSFdate.choosen && !DSFdate.error) {
-      const stringifiedDate = moment(DSFdate.value).format('YYYY-MM-DD')
-      let fullArr = [...schedules.full]
-      let morningArr = [...schedules.morning]
-      let afternoonArr = [...schedules.afternoon]
-      let valueArr = []
-      if (DSFtime.value === 'Afternoon') {
-        let index = morningArr.indexOf(stringifiedDate)
-        if (index >= 0) {
-          morningArr.splice(index, 1)
-          fullArr.splice(fullArr.length, 0, stringifiedDate)
-        } else {
-          afternoonArr.splice(afternoonArr.length, 0, stringifiedDate)
-        }
-      } else if (DSFtime.value === 'Morning') {
-        let index = afternoonArr.indexOf(stringifiedDate)
-        if (index >= 0) {
-          afternoonArr.splice(index, 1)
-          fullArr.splice(fullArr.length, 0, stringifiedDate)
-        } else {
-          morningArr.splice(morningArr.length, 0, stringifiedDate)
-        }
-      }
-
-      valueArr = concatSchedule(fullArr, morningArr, afternoonArr)
-
-      putSchedlue(valueArr)
+      postSchedlue()
 
       setDSFdate({
         value: null,
@@ -265,7 +209,7 @@ function DSLeft(props) {
                     disablePast
                     onChange={(newValue) => handleDSFdateChange(newValue)}
                     renderInput={(params) => <TextField {...params} error={DSFdate.error !== null} />}
-                    // renderDay={customDayRenderer}
+                    renderDay={customDayRenderer}
                   />
                 </LocalizationProvider>
                 <Box className="dsL-paper-body-form-item-error">
@@ -302,7 +246,7 @@ function DSLeft(props) {
               <Button variant="contained" onClick={handleClear}>
                 Clear
               </Button>
-              <Button variant="contained" onClick={handleClear}>
+              <Button variant="contained" onClick={handleSubmit}>
                 {/*handleSubmit Submit*/}
                 Submit
               </Button>

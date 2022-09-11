@@ -38,7 +38,8 @@ class DoctorController extends Controller
 
     public function getById(Request $request, $id): JsonResponse
     {
-        $data = DB::table('doctor')->where('id', $id)->get();
+        // $data = DB::table('doctor')->where('id', $id)->get();
+        $data = DB::select('select id, name, email, phone from doctor where id = ?',[$id]);
         if (count($data) === 0) {
             return response()->json(['message' => 'Doctor not found'], HTTP_NOT_FOUND);
         }
@@ -61,9 +62,12 @@ class DoctorController extends Controller
 //        }
         return response()->json($data);
     }
+
     public function list(Request $request): JsonResponse{
         //dd(1);
-        $data = DB::table('doctor')->where('status', 2)->get();
+        // $data = DB::table('doctor')->where('status', 2)->get();
+        $data = DB::select('select id, name, email, phone from doctor where status= ?',[2]);
+
         //dd($data);
         if (count($data) === 0) {
             return response()->json(['message' => 'Doctor not found'], HTTP_NOT_FOUND);
@@ -72,18 +76,19 @@ class DoctorController extends Controller
 
         return response()->json($result);
     }
+
     public function doctorDetail(Request $request, $id): JsonResponse{
-        $data = DB::table('doctor')
-                ->where('id', $id)
-                ->get();
-        $data2 = DB::table('schedule')
-                ->where('doctor_id', $id)
-                ->get();
+        $data = DB::select('select id, name, email, phone from doctor where id = ?',[$id]);
+        // $data = DB::table('doctor')
+        //         ->where('id', $id)
+        //         ->get();
+        // $data2 = DB::table('schedule')
+        //         ->where('doctor_id', $id)
+        //         ->get();
         if (count($data) === 0){
             return response()->json(['message'=>'Doctor not found'], HTTP_NOT_FOUND);
         }
-        $result = array($data, $data2);
+        $result = $data; //array($data, $data2)
         return response()->json($result);
     }
 }
-

@@ -48,5 +48,38 @@ class ScheduleController extends Controller
         return response()->json($schedule);
     }
 
-}
+    public function create(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'doctor_id' => 'bail|required|numeric',
+            'date' => 'bail|required',
+            'shift' => 'bail|required|numeric',
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), HTTP_BAD_REQUEST);
+        }
 
+        $newSchedule = [
+            "doctor_id" => $request->input('doctor_id', null),
+            "date" => $request->input('date', null),
+            "shift" => $request->input('shift', null),
+        ];
+
+        $dataSchedule = DB::table('schedule') 
+        ->where('doctor_id', $newSchedule['doctor_id'])
+        ->where('date', $newSchedule['date'])
+        ->get();
+
+        if (count($dataSchedule) === 0) {
+            DB::table('schedule')->insert($newSchedule);
+        } else {
+            DB::table('schedule')
+            ->where('doctor_id', $newSchedule['doctor_id'])
+            ->where('date', $newSchedule['date'])
+            ->update(['shift' => FULLTIME_SHIFT]);
+        }
+
+        return response()->json(['message' => 'Schedule created successfully']);
+    }
+
+}

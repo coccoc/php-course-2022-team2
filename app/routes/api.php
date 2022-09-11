@@ -20,13 +20,13 @@ use App\Http\Controllers\ScheduleController;
 //Route::get('/country/{id}', [CountryController::class, 'show']);
 Route::post('/mail', [MailController::class, 'sendMail']);
 Route::post('/doctor/create', [DoctorController::class, 'create']);
-Route::get('/doctor/list', [DoctorController::class, 'list']);
-Route::get('/doctor/detail/{id}', [DoctorController::class, 'doctorDetail']);
+Route::get('/doctor/list', [DoctorController::class, 'list']); //done
+Route::get('/doctor/detail/{id}', [DoctorController::class, 'doctorDetail']); //done
 Route::get('/doctor/{id}', [DoctorController::class, 'getById']);
 Route::get('/doctor', [DoctorController::class, 'Search']);
 Route::post('/booking/create', [BookingController::class, 'create']);  //done
 Route::get('/booking', [BookingController::class, 'Search']);
 Route::get('/booking/{id}', [BookingController::class, 'listBooking']); // done
+Route::post('/schedule', [ScheduleController::class, 'create']); // done
 Route::get('/schedule/available', [ScheduleController::class, 'getByDoctorAndDate']); //done
 Route::get('/schedule/{id}', [ScheduleController::class, 'listSchedule']); //done
-
