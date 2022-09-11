@@ -1,0 +1,109 @@
+@media screen and (max-width: 1023px) {
+
+    //------------------------------------------------------Booking complete
+
+    .bComplete-body-form-item-title {
+        font-size: 1rem !important;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    //------------------------------------------------------BookingRoot.js
+    .booking {
+        padding: 64px 0 32px !important;
+
+        &-container {
+            flex-direction: column-reverse;
+        }
+
+        &-item1 {
+            margin-top: 68px;
+        }
+
+        &-item {
+            width: 100% !important;
+        }
+    }
+
+    .bR-stack {
+        flex-direction: row !important;
+    }
+
+    .bookingR-img {
+        width: 45%;
+    }
+
+
+    
+}
+
+@media screen and (max-width: 554px) {
+    .booking-mobile-dis-none {
+        display: none !important;
+    }
+
+    .bookg-complete-form {
+        width: 100% !important;
+    }
+
+    //------------------------------------------------------Bookingleft.js
+
+    .bLeft {
+        &-paper {
+            width: 100% !important;
+        }
+    }
+
+    //------------------------------------------------------Information form
+
+    .in4Tab {
+        &-form {
+            display: flex;
+            flex-direction: column;
+
+            &-item1 {
+                flex-direction: column !important;
+
+                &-1 {
+                    width: 100%;
+                }
+
+                &-2 {
+                    width: 100%;
+                }
+
+                &-3 {
+                    width: 100%;
+                }
+            }
+
+            &-item3 {
+                width: 100%;
+            }
+
+            &-button {
+                margin-top: 32px !important;
+                position: static !important;
+            }
+        }
+    }
+
+    //------------------------------------------------------BookingForm.js
+
+    .bookingTab {
+        &-form {
+            display: flex;
+            flex-direction: column;
+
+            &-item {
+                width: 100%;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 424px) {
+    .bLeft-paper-stepperBox-stepper {
+        width: 100% !important;
+    }
+}

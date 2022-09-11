@@ -1,0 +1,27 @@
+@media screen and (max-width:767px) {
+    .mobile-dis-none {
+        display: none;
+    }
+    .nav-mobile-disnone {
+        display: none !important;
+    }
+
+    .nav {
+
+        &-left {
+            display: block !important;
+        }
+
+        &-middle {
+            display: none;
+        }
+    }
+}
+
+@media screen and (max-width:424px) {
+    
+
+    .nav-container {
+        padding: 10px 5px !important;
+    }
+}
