@@ -102,7 +102,7 @@ function TRow(props) {
   return (
     <>
       <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-        <TableCell align="left">{id + 1}</TableCell>
+        <TableCell align="left">{schedule.id}</TableCell>
         <TableCell align="left">{schedule.date}</TableCell>
         <TableCell align="left">
           {schedule.shift === 3 ? 'Full' : schedule.shift === 2 ? 'Afternoon' : 'Morning'}

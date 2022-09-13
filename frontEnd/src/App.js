@@ -35,25 +35,14 @@ function App() {
     })
   }
 
-  const getUserData = async (index) => {
-    const res = await axios.get(`https://62c65d1874e1381c0a5d833e.mockapi.io/userData/${index}`)
-    if (res.data) {
-      setLoginData({
-        information: {
-          name: res.data.name,
-        },
-        roll: 'User',
-      })
-    }
-  }
-
   useEffect(() => {
     if (isLogin.login) {
-      if (isLogin.id >= 1 && isLogin.id <= 10) {
-        getDoctorData(isLogin.id)
-      } else {
-        getUserData(isLogin.id)
-      }
+      setLoginData({
+        information: {
+          name: 'doctor1',
+        },
+        roll: 'Doctor',
+      })
     }
   }, [])
   // const [isLogin, setIsLogin] = useState(false)
@@ -64,6 +53,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingPage />}></Route>
+
+        <Route path="/signIn" element={<SignIn />}></Route>
 
         <Route path="/signUp" element={<SignUp />}></Route>
 
@@ -84,9 +75,9 @@ function App() {
         <Route
           path="/doctor-list/booking"
           element={
-            <ProtectedRoute isLogin={isLogin.login} path="">
-              <Booking />
-            </ProtectedRoute>
+            //<ProtectedRoute isLogin={isLogin.login} path="">
+            <Booking />
+            //</ProtectedRoute>
           }
         ></Route>
 
@@ -117,23 +108,16 @@ function App() {
           }
         ></Route>
 
-        <Route
-          path="news"
-          element={
-            <ProtectedRoute isLogin={isLogin.login} path="">
-              <News />
-            </ProtectedRoute>
-          }
-        ></Route>
+        <Route path="news" element={<News />}></Route>
 
-        <Route
+        {/* <Route
           path="your-booking"
           element={
             <ProtectedRoute isLogin={isLogin.login} path="">
               <UserBooking />
             </ProtectedRoute>
           }
-        ></Route>
+        ></Route> */}
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>

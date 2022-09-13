@@ -7,7 +7,9 @@ import { Autocomplete, Box, Button, FormControl, Paper, Stack, TextField, Typogr
 import { useEffect, useState } from 'react'
 import { dataState } from '../../../recoil/dataState'
 import axios from 'axios'
-import { useRecoilState } from 'recoil'
+
+import { tokenState } from '../../../recoil/tokenState'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { concatSchedule } from '../../../function/concatSchedule'
 
 const times = ['Morning', 'Afternoon']
@@ -15,6 +17,7 @@ const times = ['Morning', 'Afternoon']
 function DSLeft(props) {
   const { schedules, setSchedules, id, getSchedule } = props
   const [loginData, setLoginData] = useRecoilState(dataState)
+  const tokenData = useRecoilValue(tokenState)
 
   const [DSFdate, setDSFdate] = useState({
     value: null,
@@ -144,6 +147,7 @@ function DSLeft(props) {
       shift: DSFtime.value === 'Morning' ? 1 : 2,
     }
 
+    // axios.defaults.headers.common['Authorization'] = `${tokenData.token}`
     await axios.post(`http://localhost:8080/api/schedule`, data).catch((error) => {
       console.log(error)
     })

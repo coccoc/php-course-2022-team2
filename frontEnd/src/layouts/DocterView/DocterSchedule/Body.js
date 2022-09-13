@@ -6,22 +6,30 @@ import DSRight from './DSRight'
 import ResDialog from './ResDialog'
 import LoadingPage from '../../LoadingPage'
 
+import { tokenState } from '../../../recoil/tokenState'
 import { loginState } from '../../../recoil/loginState'
 import { useRecoilValue } from 'recoil'
 
 function Body() {
   const [openDialog, setOpenDialog] = useState(false)
   const [schedules, setSchedules] = useState()
+
   const isLogin = useRecoilValue(loginState)
+  const tokenData = useRecoilValue(tokenState)
 
   const getSchedule = async () => {
-    await axios.get(`http://localhost:8080/api/schedule/${isLogin.id}`).then((response) => {
+    let id = !isLogin.id ? '1' : isLogin.id
+    axios.defaults.headers.common['Authorization'] = `${tokenData?.token}`
+    await axios.get(`http://localhost:8080/api/schedule/${id}`).then((response) => {
       setSchedules(response.data)
     })
   }
 
   useEffect(() => {
     getSchedule()
+    return () => {
+      axios.defaults.headers.common['Authorization'] = ``
+    }
   }, [])
 
   if (schedules === undefined) {

@@ -72,7 +72,7 @@ function DoctorList() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {loginData.roll === '' || datas.length === 0 ? (
+                {datas.length === 0 ? (
                   <TableRow>
                     <TableCell align="left">
                       <Skeleton variant="text" animation="wave" />

@@ -8,10 +8,12 @@ import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil'
 import { dataState } from '../../recoil/dataState'
 import { tabState } from '../../recoil/tabState'
 import { profileTab } from '../../recoil/profileTab'
+import { tokenState } from '../../recoil/tokenState'
 
 function LoggedInNavIcon(props) {
   const { open, setOpen } = props
   const resetIsLogin = useResetRecoilState(loginState)
+  const resetToken = useResetRecoilState(tokenState)
   const navigate = useNavigate()
   const resetLoginData = useResetRecoilState(dataState)
   const restProileTab = useResetRecoilState(profileTab)
@@ -24,6 +26,7 @@ function LoggedInNavIcon(props) {
     resetLoginData()
     setDefaultTabName()
     restProileTab()
+    resetToken()
     navigate('/')
   }
 
@@ -31,7 +34,7 @@ function LoggedInNavIcon(props) {
     <>
       <ListItem disablePadding>
         <ListItemText
-          primary={`Hello ${loginData.roll === 'Doctor' ? loginData.information.username : loginData.information.name}`}
+          primary={`Hello ${loginData.information.name}`}
           sx={{ color: '#000', textAlign: 'center' }}
         ></ListItemText>
       </ListItem>

@@ -32,13 +32,13 @@ class BookingController extends Controller
             "customer_name" => $request->input('customer_name', null),
             "shift" => $request->input('shift', null),
         ];
-//        $response = MailController::sendBookingMail($dataBooking);
+        // $response = MailController::sendBookingMail($dataBooking);
 
         $dataSchedule = DB::table('schedule')
             ->where('doctor_id', $dataBooking['doctor_id'])
             ->where('date', $dataBooking['date'])
             ->whereIn('shift', [$dataBooking['shift'], FULLTIME_SHIFT])
-            ->where('booked', '!=' , $dataBooking['shift'])
+            ->where('booked', '!=', $dataBooking['shift'])
             ->get();
         if (count($dataSchedule) === 0) {
             return response()->json(['message' => 'Schedule not found'], HTTP_NOT_FOUND);
@@ -46,12 +46,12 @@ class BookingController extends Controller
         $schedule = $dataSchedule[0];
         if (in_array($schedule->booked, [MORNING_SHIFT, AFTERNOON_SHIFT])) {
             DB::table('schedule')
-              ->where('id', $schedule->id)
-              ->update(['booked' => FULLTIME_SHIFT]);
+                ->where('id', $schedule->id)
+                ->update(['booked' => FULLTIME_SHIFT]);
         } else {
             DB::table('schedule')
-              ->where('id', $schedule->id)
-              ->update(['booked' => $dataBooking['shift']]);
+                ->where('id', $schedule->id)
+                ->update(['booked' => $dataBooking['shift']]);
         }
         DB::table('booking')->insert($dataBooking);
         return response()->json(['message' => 'Schedule created successfully']);
@@ -74,14 +74,14 @@ class BookingController extends Controller
 
     public function listBooking(Request $request, $id): JsonResponse
     {
-        $data = DB::table('booking')->where('doctor_id', $id)->get();
+        $data = DB::table('booking')->where('doctor_id', $id)->orderBy('date', 'asc')->get();
 
         // dd($data);
-        
+
         if (count($data) === 0) {
             return response()->json(['message' => 'Doctor not found'], HTTP_NOT_FOUND);
         }
-        
+
         return response()->json($data);
     }
 }

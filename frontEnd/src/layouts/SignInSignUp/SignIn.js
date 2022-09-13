@@ -9,18 +9,20 @@ import HomeIcon from '@mui/icons-material/Home'
 
 import { loginState } from '../../recoil/loginState'
 import { dataState } from '../../recoil/dataState'
+import { tokenState } from '../../recoil/tokenState'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import * as yup from 'yup'
 import { useFormik } from 'formik'
 
 const validationSchema = yup.object({
-  username: yup.string().required(),
+  username: yup.string().email('Enter a valid email').required('Please enter your email'),
   password: yup.string().required(),
 })
 
 function SignIn() {
   const navigate = useNavigate()
 
+  const setToken = useSetRecoilState(tokenState)
   const [isLogin, setIsLogin] = useRecoilState(loginState)
   const [loginData, setLoginData] = useRecoilState(dataState)
   const [loading, setLoading] = useState(false)
@@ -45,69 +47,35 @@ function SignIn() {
     },
   })
 
-  const getDoctorData = async (index) => {
-    const information = await axios.get(`https://jsonplaceholder.typicode.com/users/${index}`)
-
-    setLoginData({
-      information: information.data,
-      roll: 'Doctor',
-    })
-    setIsLogin({
-      login: true,
-      id: index,
-      roll: 'Doctor',
-    })
-  }
-
-  const getUserData = async (index) => {
-    const res = await axios.get(`https://62c65d1874e1381c0a5d833e.mockapi.io/userData/${index}`)
-    if (res.data) {
-      setLoginData({
-        information: {
-          name: res.data.name,
-        },
-        roll: 'User',
-      })
-      setIsLogin({
-        login: true,
-        id: res.data.id,
-        roll: 'User',
-      })
-    }
-  }
-
   const handleClick = async (values) => {
     setUsernameAlert(false)
     setPasswordAlert(false)
     setLoading(true)
-    let arr
-    let id
-    await axios.get('https://6316fc9e82797be77fefdcfc.mockapi.io/data').then((response) => {
-      arr = response.data.filter((data) => data.username === values.username)
-      if (arr.length !== 0) {
-        if (arr[0].password === values.password) {
-          id = arr[0].id
-        } else {
-          setError(true)
-          setUsernameAlert(false)
-          setPasswordAlert(true)
-          setLoading(false)
-        }
-      } else {
+    await axios
+      .post('http://localhost:8080/api/login', values)
+      .then((response) => {
+        setToken({
+          token: response.data.token,
+        })
+        setLoginData({
+          information: {
+            name: 'doctor1',
+          },
+          roll: 'Doctor',
+        })
+        setIsLogin({
+          login: true,
+          id: response.data.id,
+          roll: 'Doctor',
+        })
+        navigate('/')
+        console.log(response)
+      })
+      .catch((error) => {
         setError(true)
-        setUsernameAlert(true)
-        setPasswordAlert(false)
         setLoading(false)
-      }
-      if (id !== undefined) {
-        id = Number(id)
-        if (id <= 10) {
-          getDoctorData(id)
-        } else {
-          getUserData(id)
-        }
-      }
-    })
+        console.log(error)
+      })
   }
 
   return (
