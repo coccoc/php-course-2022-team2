@@ -12,11 +12,9 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import moment from 'moment'
 
+import { tokenState } from '../../../recoil/tokenState'
 import { loginState } from '../../../recoil/loginState'
 import { useRecoilValue } from 'recoil'
 import { useEffect, useState } from 'react'
@@ -26,6 +24,8 @@ import { de } from 'date-fns/locale'
 
 function Body() {
   const isLogin = useRecoilValue(loginState)
+  const tokenData = useRecoilValue(tokenState)
+
   const [bookingSchedule, setBookingSchedule] = useState()
   const [shows, setShows] = useState()
   const [date, setDate] = useState({
@@ -41,10 +41,12 @@ function Body() {
   }
 
   const callAPI = async () => {
+    let id = !isLogin.id ? '1' : isLogin.id
+    axios.defaults.headers.common['Authorization'] = `${tokenData?.token}`
     await axios
-      .get(`http://localhost:8080/api/booking/${isLogin.id}`)
+      .get(`http://localhost:8080/api/booking/${id}`)
       .then((response) => {
-        console.log('1')
+        console.log(response)
         setBookingSchedule(response.data)
         setShows(response.data)
       })
@@ -55,6 +57,9 @@ function Body() {
 
   useEffect(() => {
     callAPI()
+    return () => {
+      axios.defaults.headers.common['Authorization'] = ``
+    }
   }, [])
 
   const deleteDataApi = async () => {

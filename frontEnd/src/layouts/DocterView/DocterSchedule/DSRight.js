@@ -44,8 +44,8 @@ function DSRight(props) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {schedules.slice(page * 5, page * 5 + 5).map((schedule, index) => (
-                  <TRow key={index} schedule={schedule} id={index} />
+                {schedules.slice(page * 5, page * 5 + 4).map((schedule) => (
+                  <TRow key={schedule.id} schedule={schedule} />
                 ))}
               </TableBody>
             </Table>

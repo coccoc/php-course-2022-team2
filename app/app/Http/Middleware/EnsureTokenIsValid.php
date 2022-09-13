@@ -26,6 +26,9 @@ class EnsureTokenIsValid
 	public function handle($request, Closure $next)
 	{
 		$jwt = $request->header('Authorization');
+		if(empty($jwt)) {
+			return response()->json(['message' => "empty header authorization"], HTTP_UNAUTHORIZED);
+		}
 		$tokenParts = explode('.', $jwt);
 
 		$payload = base64_decode($tokenParts[0]);
@@ -43,6 +46,6 @@ class EnsureTokenIsValid
 		{
 			return $next($request);
 		}
-		return redirect('home');
+		return response()->json(['message' => "invalid authorized token"], HTTP_UNAUTHORIZED);
 	}
 }

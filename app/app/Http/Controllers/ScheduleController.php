@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
@@ -12,8 +13,8 @@ class ScheduleController extends Controller
     public function getByDoctorAndDate(Request $request): JsonResponse
     {
         $data = [
-          "date" => $request->input('date', null),
-          "doctor_id" => $request->input('doctor_id', null),
+            "date" => $request->input('date', null),
+            "doctor_id" => $request->input('doctor_id', null),
         ];
         $dataSchedule = DB::table('schedule')
             ->where('doctor_id', $data['doctor_id'])
@@ -27,22 +28,23 @@ class ScheduleController extends Controller
     }
 
 
-    public function listSchedule(Request $request, $id) {
+    public function listSchedule(Request $request, $id)
+    {
 
-        $data = DB::table('schedule')->where('doctor_id', $id)->get();
+        $data = DB::table('schedule')->where('doctor_id', $id)->orderBy('date', 'asc')->get();
 
         if (count($data) === 0) {
             return response()->json(['message' => 'Doctor not found'], HTTP_NOT_FOUND);
         }
-        
+
         return response()->json($data);
     }
 
     public function getByDoctorID(Request $request, $id): JsonResponse
     {
         $data = DB::table('schedule')->where('doctor_id', $id)->get();
-        if(count($data)===0){
-            return response()->json(['message'=>'Schedule not found'], HTTP_NOT_FOUND);
+        if (count($data) === 0) {
+            return response()->json(['message' => 'Schedule not found'], HTTP_NOT_FOUND);
         }
         $schedule = $data;
         return response()->json($schedule);
@@ -65,21 +67,20 @@ class ScheduleController extends Controller
             "shift" => $request->input('shift', null),
         ];
 
-        $dataSchedule = DB::table('schedule') 
-        ->where('doctor_id', $newSchedule['doctor_id'])
-        ->where('date', $newSchedule['date'])
-        ->get();
+        $dataSchedule = DB::table('schedule')
+            ->where('doctor_id', $newSchedule['doctor_id'])
+            ->where('date', $newSchedule['date'])
+            ->get();
 
         if (count($dataSchedule) === 0) {
             DB::table('schedule')->insert($newSchedule);
         } else {
             DB::table('schedule')
-            ->where('doctor_id', $newSchedule['doctor_id'])
-            ->where('date', $newSchedule['date'])
-            ->update(['shift' => FULLTIME_SHIFT]);
+                ->where('doctor_id', $newSchedule['doctor_id'])
+                ->where('date', $newSchedule['date'])
+                ->update(['shift' => FULLTIME_SHIFT]);
         }
 
         return response()->json(['message' => 'Schedule created successfully']);
     }
-
 }

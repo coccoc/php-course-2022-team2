@@ -53,6 +53,9 @@ class LoginController extends Controller
 		if(empty($jwtToken)) {
 			return response()->json(['message' => "incorrect username or password"], HTTP_UNAUTHORIZED);
 		}
-		return response()->json(['token' => $jwtToken]);
+		$bodyContent = json_decode($request->getContent());
+		$data = DB::table('doctor')->where('email', $bodyContent->username)->where('password', $bodyContent->password)->get();
+		$id_doctor = $data[0]->id;
+		return response()->json(['token' => $jwtToken, 'id' => $id_doctor]);
 	}
 }

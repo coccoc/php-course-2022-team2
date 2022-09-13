@@ -53,13 +53,13 @@ const userNav = [
     title: 'Home',
     to: '/',
   },
+  // {
+  //   id: 2,
+  //   title: 'Your Bookings',
+  //   to: '/your-booking',
+  // },
   {
     id: 2,
-    title: 'Your Bookings',
-    to: '/your-booking',
-  },
-  {
-    id: 3,
     title: 'News',
     to: '/news',
   },

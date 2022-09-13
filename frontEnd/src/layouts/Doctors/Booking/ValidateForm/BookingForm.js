@@ -47,7 +47,7 @@ function BookingForm(props) {
   //----------------------------------------------------------------------get data
 
   const doctorInfor = async () => {
-    const res = await axios.get('https://jsonplaceholder.typicode.com/users')
+    const res = await axios.get('http://localhost:8080/api/doctor/list')
     if (res.data) {
       var arr = []
       for (let key in res.data) {
@@ -223,6 +223,7 @@ function BookingForm(props) {
       date: moment(date.value).format('YYYY-MM-DD'),
       shift: time.value === 'Morning' ? 1 : 2,
     }
+    console.log(data)
     await axios
       .post(`http://localhost:8080/api/booking/create`, data)
       .then(() => {
